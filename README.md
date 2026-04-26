@@ -2,6 +2,27 @@
 
 Small Express API for exploring Azure resource groups and Azure Static Web Apps from a configured Azure subscription.
 
+## Architecture
+
+```mermaid
+flowchart LR
+    Client[API Client] -->|HTTP request| Express[Express Server]
+    Express --> Env[.env configuration]
+    Env --> SubId[AZURE_SUBSCRIPTION_ID]
+    Express --> Credential[DefaultAzureCredential]
+    Credential --> AzureAuth[Azure Identity]
+    Express --> ResourceClient[ResourceManagementClient]
+    SubId --> ResourceClient
+    AzureAuth --> ResourceClient
+    ResourceClient --> ARM[Azure Resource Manager]
+    ARM --> RG[Resource Groups]
+    ARM --> Resources[Azure Resources]
+    ARM --> StaticApps[Azure Static Web Apps]
+    Express -->|health check| Axios[Axios]
+    Axios --> StaticUrl[Static Web App URL]
+    Express -->|JSON response| Client
+```
+
 ## Requirements
 
 - Node.js
